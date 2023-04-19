@@ -93,19 +93,22 @@ const express = require('express') ;
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const db = require('./db');
+const cors = require('cors');
 
 const app = express(); // Initialize the Express app
 
+app.use(cors())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.post('/users', async (req, res, next) => {
+app.post('/addUser', async (req, res, next) => {
+  console.log(req.body);
   try {
     await db.createUser(req.body);
     res.send('User created successfully');
-  } catch (err) {
+  } catch (err)  {
     next(err);
   }
 });
@@ -123,6 +126,20 @@ app.get('/users/:id', async (req, res, next) => {
   try {
     const user = await db.getUserById(req.params.id);
     res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/user', async (req, res, next) => {
+  try {
+    const user = await db.getUserByNameAndPassword(req.body);
+    if (user) {
+      res.json(user);
+    } else {
+res.status(401);
+res.end();
+    }
   } catch (err) {
     next(err);
   }
