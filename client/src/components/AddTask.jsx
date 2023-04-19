@@ -1,31 +1,26 @@
 import { useNavigate } from 'react-router-dom';
-
+import { fetchData } from './fetchData';
 function AddTask({ task, setTask }) {
     const navigate = useNavigate();
+
+    const url = 'http://localhost:3000/addTask';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const newTask = {
-          id: task.id + 1,
+          userId: "userId",
           title: formData.get('title'),
           details: formData.get('details'),
           estimateTime: formData.get('estimateTime')
         };
         try {
-          const response = await fetch('/api/tasks', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newTask)
-          });
-          if (!response.ok) {
-            throw new Error('Failed to add task');
+          const responseData = await fetchData(url, newTask, 'POST');
+          if (responseData) {
+            setTask(newTask);
+            console.log(newTask);
+            navigate('/Task'); 
           }
-          setTask(newTask);
-          console.log(newTask);
-          navigate('/Task');
         } catch (error) {
           console.error(error);
         }
