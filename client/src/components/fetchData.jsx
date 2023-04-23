@@ -1,6 +1,6 @@
 
 
-export async function fetchData(url, data, method) {
+export async function fetchData(url, method, data) {
   const response = await fetch(url, {
     method: method,
     headers: {

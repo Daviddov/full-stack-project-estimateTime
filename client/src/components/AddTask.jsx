@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { fetchData } from './fetchData';
-function AddTask({ task, setTask }) {
+function AddTask({currentUser, setCurrentTask} ) {
     const navigate = useNavigate();
 
     const url = 'http://localhost:3000/addTask';
@@ -8,18 +8,21 @@ function AddTask({ task, setTask }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
+
         const newTask = {
-          userId: "userId",
+          userId: currentUser.id,
           title: formData.get('title'),
           details: formData.get('details'),
           estimateTime: formData.get('estimateTime')
         };
+        console.log(newTask);
         try {
-          const responseData = await fetchData(url, newTask, 'POST');
+          const responseData = await fetchData(url, 'POST', newTask);
           if (responseData) {
-            setTask(newTask);
-            console.log(newTask);
-            navigate('/Task'); 
+            setCurrentTask(responseData);
+            console.log(responseData);
+            const taskId =responseData.id;
+            navigate('/TaskDetails/'+taskId); 
           }
         } catch (error) {
           console.error(error);

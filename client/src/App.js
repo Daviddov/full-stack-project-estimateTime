@@ -1,41 +1,35 @@
 import Login from './components/Login';
 import Main from './components/Main';
-import Error from './components/Error';
-import Home from './components/Home';
-
-import { Route, BrowserRouter, Routes } from 'react-router-dom';
+import ErrorPage from './components/Error';
+import HomePage from './components/HomePage';
+import SignUp from './components/SignUp';
 import AddTask from './components/AddTask';
 import AllTasks from './components/AllTasks';
-import Task from './components/Task';
+import TaskDetails from './components/TaskDetails';
 import { useState } from 'react';
 import Profile from './components/Profile';
 
+import { Route, BrowserRouter, Routes } from 'react-router-dom';
 
 function App() {
-  const [user, setUser] = useState();
-  const [task, setTask] = useState({
-    "id": 0
-  });
-
-
+  const [currentUser, setCurrentUser] = useState("");
+  const [currentTask, setCurrentTask] = useState("null");
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='login' element={<Login setUser={setUser} />} />
-        <Route path='/' element={<Home user={user} />}>
-          <Route path='main' element={<Main />} />
-          <Route path='profile' element={<Profile />} />
-          <Route path='addTask' element={<AddTask task={task} setTask={setTask} />} />
-          <Route path='Task' element={<Task task={task}/>} />
-          <Route path='allTasks' element={<AllTasks />}>
-            <Route path=':TasksId' element={<Task />} />
+        <Route path="/signup" element={<SignUp currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
+        <Route path="/login" element={<Login currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
+        <Route path="/" element={<HomePage currentUser={currentUser} />}>
+          <Route path="/main" element={<Main currentUser={currentUser}/>}/>
+          <Route path="/addTask" element={<AddTask currentUser={currentUser} setCurrentTask={setCurrentTask} />} />
+          <Route path="/TaskDetails/:taskId" element={<TaskDetails currentTask={currentTask} />} />
+          <Route path="/allTasks" element={<AllTasks currentUser={currentUser} />}>
+            <Route path=":taskId" element={<TaskDetails currentTask={currentTask} />} />
           </Route>
-
+          <Route path="/profile" element={<Profile currentUser={currentUser} />} />
         </Route>
-
-        <Route path='*' element={<Error />} />
-
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>
   );

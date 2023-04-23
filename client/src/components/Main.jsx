@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 function Main() {
   const navigate = useNavigate();
@@ -18,6 +18,7 @@ function Main() {
       <button onClick={handleAllTasks} type="button" aria-label="All Tasks">
         All Tasks
       </button>
+    
     </div>
   );
 }

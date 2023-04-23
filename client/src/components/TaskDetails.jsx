@@ -1,11 +1,13 @@
 import React, { useState, useRef } from "react";
+import { fetchData } from "./fetchData";
 
-function Task({ task }) {
-  const { title, details, estimateTime } = task;
+function TaskDetails({ currentTask }) {
+  const {id, title, details, estimateTime } = currentTask;
 
   const [timerRunning, setTimerRunning] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [deleted, setDeleted] = useState(false);
   const timerRef = useRef(null);
 
   const startTimer = () => {
@@ -31,6 +33,19 @@ function Task({ task }) {
     setFinished(true);
     stopTimer();
   };
+  
+   const deleteTask = async () => {
+     const url = 'http://localhost:3000/task/' + id;
+     try {
+      const responseData = await fetchData(url, 'DELETE');
+      // handle success
+      console.log(responseData +"deleted");
+      setDeleted(true);
+    } catch (error) {
+      // handle error
+      console.error(error);
+    }
+   };
 
   const calculateProgress = () => {
     const progress = Math.round((timeElapsed / estimateTime) * 100);
@@ -43,12 +58,17 @@ function Task({ task }) {
 
   return (
     <>
-      <h1>Task</h1>
+    {deleted ? (
+        <h2>task {id} deleted</h2>
+      ): (
+    <>
+      <h1>id: {id} </h1>
       <h1>title: {title}</h1>
       <h2>details: {details}</h2>
       <h2>estimate Time: {estimateTime} seconds</h2>
       {finished && (
         <h2>Accuracy: {calculateProgress().accuracy}%</h2>
+        
       )}
 
       {finished ? (
@@ -65,10 +85,13 @@ function Task({ task }) {
           )}
           <button onClick={resetTimer}>Reset Timer</button>
           <button onClick={finishTask}>Finish Task</button>
+          <button onClick={deleteTask}>Delete Task</button>
         </>
       )}
+</>
+)}
     </>
   );
 }
 
-export default Task;
+export default TaskDetails;

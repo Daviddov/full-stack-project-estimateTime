@@ -1,14 +1,4 @@
 
-// // create db in my sql
-// app.post('/db', (req, res) => {
-//     let sql = 'CREATE DATABASE tasks'
-//     db.query(sql, (err, result) => {
-//         if (err) throw err;
-//         console.log("Result: ", result);
-//         res.send( JSON.stringify(result));
-//     })
-// })
-
 // // CREATE TABLE users
 // app.post('/addTable', (req, res) => {
 //     let sql = 'CREATE TABLE IF NOT EXISTS users(
@@ -23,10 +13,9 @@
 //     })
 // })
 
-
-
-
 // module.exports = app;
+
+
 const express = require('express') ;
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -45,8 +34,8 @@ app.use(cookieParser());
 app.post('/addUser', async (req, res, next) => {
   console.log(req.body);
   try {
-    await db.createUser(req.body);
-    res.send('User created successfully');
+    const user = await db.createUser(req.body);
+    res.json(user);
   } catch (err)  {
     next(err);
   }
@@ -78,6 +67,16 @@ res.end();
   }
 });
 
+// CREATE DATA BASE 
+app.post('/addDB/:dbName', async (req, res, next) => {
+  try {
+    await db.createDB(req.params.dbName);
+    res.send('DATA BASE created successfully');
+  } catch (err)  {
+    next(err);
+  }
+ });
+
 // CREATE TABLE tasks
 app.post('/addTable', async (req, res, next) => {
   try {
@@ -95,7 +94,7 @@ app.post('/addTable', async (req, res, next) => {
      const task = await db.createTask(req.body);
      if(task){
        res.json(task);
-       res.send('task created successfully');
+       res.send('task created successfully'); 
      }
    } catch (err)  {
      next(err);
@@ -114,15 +113,16 @@ app.post('/addTable', async (req, res, next) => {
 }) ;
 
 
- //get user by id
-// app.get('/users/:id', async (req, res, next) => {
-//   try {
-//     const user = await db.getUserById(req.params.id);
-//     res.json(user);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+// delete task by id
+app.delete('/task/:id', async (req, res, next) => {
+  try {
+    const task = await db.deleteTask(req.params.id);
+    res.json(task);
+    res.send('Task deleted successfully');
+  } catch (err) {
+    next(err);
+  }
+});
 
 // delete user by id
 // app.delete('/users/:id', async (req, res, next) => {
