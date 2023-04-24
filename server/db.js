@@ -39,6 +39,22 @@ async function createTable() {
   return rows;
 }
 
+async function addColumn(table, column) {
+  const [rows] = await pool.execute(
+    `ALTER TABLE ${table} ADD ${column} VARCHAR(255)`
+  );
+  return rows;
+}
+
+async function deleteColumn(table, column) {
+  const [rows] = await pool.execute(
+    `ALTER TABLE ${table} DROP COLUMN ${column}`
+  );
+  return rows;
+}
+
+
+
 async function createDB(dbName, pool) {
   try {
     const [rows] = await pool.execute(
@@ -89,14 +105,33 @@ async function deleteUser(userId) {
     return newTask[0];
   }
   
-  
-  
+async function getAllTasks() {
+  const [rows] = await pool.execute('SELECT * FROM tasks');
+  return rows;
+}
 
 async function getTasks(userId) {
   
   const [rows] = await pool.execute('SELECT * FROM tasks WHERE userId = ?',
   [userId]);
   return rows;
+}
+
+
+async function updateTask(taskData) {
+  const {id, timeElapsed, finishedTask} = taskData;
+  const [insertResult] = await pool.execute(
+    'UPDATE tasks SET timeElapsed = ?, finishedTask = ? WHERE id = ?',
+    [timeElapsed, finishedTask, id]
+  );
+  
+  const [updateTask] = await pool.execute(
+    'SELECT * FROM tasks WHERE id = ?',
+    [id]
+  );
+  
+  console.log(updateTask[0]);
+  return updateTask[0];
 }
 
 async function deleteTask(taskId) {
@@ -109,12 +144,16 @@ async function deleteTask(taskId) {
 
 module.exports = {
   createDB,
+  createTable,
+  addColumn,
+  deleteColumn,
   createUser,
   getUsers,
-  deleteTask,
   deleteUser,
   getUserByNameAndPassword,
   createTask,
-  createTable,
   getTasks,
+  updateTask,
+  deleteTask,
+  getAllTasks,
 };

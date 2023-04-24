@@ -2,11 +2,10 @@ import React, { useState, useRef } from "react";
 import { fetchData } from "./fetchData";
 
 function TaskDetails({ currentTask }) {
-  const {id, title, details, estimateTime } = currentTask;
-
+  const {id, title, details, estimateTime, finishedTask} = currentTask;
   const [timerRunning, setTimerRunning] = useState(false);
-  const [timeElapsed, setTimeElapsed] = useState(0);
-  const [finished, setFinished] = useState(false);
+  const [timeElapsed, setTimeElapsed] = useState(currentTask.timeElapsed || 0);
+  const [finished, setFinished] = useState(finishedTask || false);
   const [deleted, setDeleted] = useState(false);
   const timerRef = useRef(null);
 
@@ -20,6 +19,7 @@ function TaskDetails({ currentTask }) {
   const stopTimer = () => {
     setTimerRunning(false);
     clearInterval(timerRef.current);
+    updateTask(false);
   };
 
   const resetTimer = () => {
@@ -32,6 +32,7 @@ function TaskDetails({ currentTask }) {
   const finishTask = () => {
     setFinished(true);
     stopTimer();
+    updateTask(true);
   };
   
    const deleteTask = async () => {
@@ -46,6 +47,24 @@ function TaskDetails({ currentTask }) {
       console.error(error);
     }
    };
+
+  const updateTask = async (finished) => {
+    const url = `http://localhost:3000/updateTask/${id}`;
+    const updateTask = {
+      id,
+      timeElapsed,
+      finishedTask: finished
+    };
+    try {
+      const responseData = await fetchData(url, 'PUT', updateTask);
+      // handle success
+      console.log(responseData + " updated");
+
+    } catch (error) {
+      // handle error
+      console.error(error);
+    }
+  };
 
   const calculateProgress = () => {
     const progress = Math.round((timeElapsed / estimateTime) * 100);

@@ -87,6 +87,37 @@ app.post('/addTable', async (req, res, next) => {
   }
  });
  
+ // add column in table
+ app.put('/addColumn/:table/:column', async (req, res, next) => {
+  try {
+    const {table, column} = req.params;
+    if (!table || !column) {
+      return res.status(400).send('Invalid input. Must provide table name and column name.');
+    }
+    await db.addColumn(table, column);
+    return res.send('Column added successfully.');
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send('Error adding column to table.');
+  }
+});
+
+ // delete column in table
+ app.delete('/deleteColumn/:table/:column', async (req, res, next) => {
+  try {
+    const {table, column} = req.params;
+    if (!table || !column) {
+      return res.status(400).send('Invalid input. Must provide table name and column name.');
+    }
+    await db.deleteColumn(table, column);
+    return res.send('Column deleted successfully.');
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send('Error adding column to table.');
+  }
+});
+
+ 
  //add task
  app.post('/addTask', async (req, res, next) => {
    console.log(req.body);
@@ -94,7 +125,20 @@ app.post('/addTable', async (req, res, next) => {
      const task = await db.createTask(req.body);
      if(task){
        res.json(task);
-       res.send('task created successfully'); 
+      //  res.send('task created successfully'); 
+     }
+   } catch (err)  {
+     next(err);
+   }
+ });
+
+ //update task
+ app.put('/updateTask/:id', async (req, res, next) =>  { 
+   
+   try {
+     const task = await db.updateTask(req.body);
+     if(task){
+       res.json(task);
      }
    } catch (err)  {
      next(err);
@@ -111,6 +155,17 @@ app.post('/addTable', async (req, res, next) => {
     next(err);
   }
 }) ;
+ 
+ //get all tasks 
+ app.get('/alltasks', async (req, res, next) =>  {
+  
+  try {
+    const tasks = await db.getAllTasks();
+    res.json(tasks);
+  } catch (err) {
+    next(err);
+  }
+}) ;
 
 
 // delete task by id
@@ -118,7 +173,7 @@ app.delete('/task/:id', async (req, res, next) => {
   try {
     const task = await db.deleteTask(req.params.id);
     res.json(task);
-    res.send('Task deleted successfully');
+    // res.send('Task deleted successfully');
   } catch (err) {
     next(err);
   }
