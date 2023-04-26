@@ -1,6 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { fetchData } from './fetchData';
+import { useState } from 'react';
+import { Button, TextField } from '@mui/material';
+
+
+
+
 function AddTask({currentUser, setCurrentTask} ) {
+  const [time, setTime] = useState('10:00');
     const navigate = useNavigate();
 
     const url = 'http://localhost:3000/addTask';
@@ -31,12 +38,14 @@ function AddTask({currentUser, setCurrentTask} ) {
       
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input type="text" placeholder="Title" name="title" />
-            <input type="text" placeholder="Details" name="details" />
-            <input type="number" placeholder="Estimate time for the task" name="estimateTime" />
-            <button type="submit">Submit</button>
-        </form>
+
+      <form onSubmit={handleSubmit}>
+        <TextField label="Title" name="title" />
+        <TextField label="Details" name="details" />
+        <TextField label="Estimate time for the task" name="estimateTime" type="number" />
+        <Button variant="contained" color="primary" type="submit">Submit</Button>
+      </form>
+      
     );
 }
 

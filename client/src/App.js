@@ -1,4 +1,4 @@
-import Login from './components/Login';
+
 import Main from './components/Main';
 import ErrorPage from './components/Error';
 import HomePage from './components/HomePage';
@@ -10,6 +10,7 @@ import { useState } from 'react';
 import Profile from './components/Profile';
 
 import { Route, BrowserRouter, Routes } from 'react-router-dom';
+import SignIn from './components/Singin';
 
 function App() {
   const [currentUser, setCurrentUser] = useState("");
@@ -19,7 +20,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/signup" element={<SignUp currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
-        <Route path="/login" element={<Login currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
+        <Route path="/login" element={<SignIn currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
         <Route path="/" element={<HomePage currentUser={currentUser} />}>
           <Route path="/main" element={<Main currentUser={currentUser}/>}/>
           <Route path="/addTask" element={<AddTask currentUser={currentUser} setCurrentTask={setCurrentTask} />} />

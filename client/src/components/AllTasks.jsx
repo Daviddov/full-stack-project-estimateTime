@@ -1,32 +1,67 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { fetchData } from './fetchData';
 import TaskDetails from './TaskDetails';
-import { useMemo, useState, useEffect } from 'react';
 
-function AllTasks({currentUser}) {
-  const [allTasks, setAllTasks] = useState([]);
+import { Typography, Grid } from '@mui/material';
+
+function AllTasks({ currentUser }) {
   const userId = currentUser.id;
-
   const url = `http://localhost:3000/tasks/${userId}`;
+  const [allTasks, setAllTasks] = useState([]);
+
+  const calculateAverageEstimate = (task) => {
+    console.log(task);
+    const accuracy = Math.round(((task.estimateTime - task.timeElapsed) / task.estimateTime) * 100); 
+    console.log(accuracy);
+    return accuracy;
+  }
+
+  const calculateAll = () => {
+    let averageAccuracy = 0;
+    allTasks.forEach(task => {
+      if (task.finishedTask) { 
+        console.log(task);
+        averageAccuracy += calculateAverageEstimate(task)
+      }
+    })
+    averageAccuracy = Math.round(averageAccuracy / allTasks.filter(task => task.finishedTask).length);
+    console.log(averageAccuracy);
+    return averageAccuracy;
+  }
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchReq = async () => {
-      const responseData = await fetchData(url, 'GET');
-      if (responseData) {
-        setAllTasks(responseData);
-        console.log(responseData);
+      try {
+        const responseData = await fetchData(url, 'GET');
+        if (responseData) {
+          setAllTasks(responseData);
+          console.log(responseData);
+        }
+      } catch (error) {
+        navigate('/error');
       }
     };
     fetchReq();
-  }, [url]);
+  }, [url, navigate]);
 
   return (
-    <div>
-      <h1>All Tasks</h1>
-      {allTasks.map((currentTask) => (
-        <TaskDetails currentTask = {currentTask} />
-      ))}
-    </div>
+    <>
+      <Typography variant="h5" align="center" color="primary">
+        your average Accuracy: {calculateAll()}%
+      </Typography>
+      <Typography variant="h4" align="center">All Tasks</Typography>
+      <Grid container spacing={3}>
+        {allTasks.map(currentTask => (
+          <Grid item key={currentTask.id} xs={12} sm={6} md={4} lg={3}>
+            <TaskDetails currentTask={currentTask} />
+          </Grid>
+        ))}
+      </Grid>
+    </>
   );
 }
 

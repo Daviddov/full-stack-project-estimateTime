@@ -7,11 +7,12 @@ function HomePage({ currentUser }) {
         <div>
             <NavBar />
            
-            <h1>{currentUser.name}</h1>
-            {currentUser.name == "admin" ? <DashboardManager /> :
-             currentUser ? <h1>{`wellcome ${currentUser.name}`}</h1> : <Navigate to={'/login'} /> }
+       
+           { currentUser ? <h1>{`wellcome ${currentUser.name}`}</h1> : <Navigate to={'/login'} />}
+            {currentUser.name === "admin" ? <DashboardManager /> : 
+             
             <Outlet />
-
+    }
         </div>
     );
 

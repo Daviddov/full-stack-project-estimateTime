@@ -1,4 +1,6 @@
 function Profile({currentUser}) {
+
+
    return (
      <div>
        <h2>My Profile</h2>

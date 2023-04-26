@@ -53,9 +53,24 @@ app.get('/users', async (req, res, next) => {
   }
 });
 // get User By Name And Password
+// app.post('/user', async (req, res, next) => {
+//   try {
+//     const user = await db.getUserByNameAndPassword(req.body);
+//     if (user) {
+//       res.json(user);
+//     } else {
+// res.status(401);
+// res.end();
+//     }
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+// get User By Email And Password
 app.post('/user', async (req, res, next) => {
   try {
-    const user = await db.getUserByNameAndPassword(req.body);
+    const user = await db.getUserByEmailAndPassword(req.body);
     if (user) {
       res.json(user);
     } else {

@@ -81,6 +81,13 @@ async function getUserByNameAndPassword(body) {
     );
     return rows[0];
 }
+async function getUserByEmailAndPassword(body) {
+  const [rows] = await pool.execute(
+    'SELECT * FROM users WHERE email = ? AND password = ?',
+    [body.email, body.password]
+    );
+    return rows[0];
+}
 
 
 async function deleteUser(userId) {
@@ -88,6 +95,12 @@ async function deleteUser(userId) {
     'DELETE FROM users WHERE id = ?',
     [userId]
     );
+
+    const [userTasks] = await pool.execute(
+      'DELETE FROM tasks WHERE userId = ?',
+      [userId]
+      );
+
   }
  
   async function createTask(taskData) {
@@ -151,9 +164,11 @@ module.exports = {
   getUsers,
   deleteUser,
   getUserByNameAndPassword,
+  getUserByEmailAndPassword,
   createTask,
   getTasks,
   updateTask,
   deleteTask,
   getAllTasks,
+
 };
