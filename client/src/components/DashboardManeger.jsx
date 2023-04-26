@@ -1,31 +1,50 @@
 import { useState, useEffect } from 'react';
 import TaskDetails from './TaskDetails';
-import fetchData from './fetchData';
+import { fetchData } from './fetchData';
+import UserDetails from './UserDetails';
 
 function DashboardManager() {
   const [allTasks, setAllTasks] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
 
-  useEffect(() => {
-    const fetchAllTasks = async () => {
+
+    const handleAllTasksClick = async () => {
       const url = 'http://localhost:3000/alltasks';
       const responseData = await fetchData(url, 'GET');
       if (responseData) {
         setAllTasks(responseData);
       }
     };
-    fetchAllTasks();
-  }, []);
+   
+  const handleAllUsersClick = async () => {
+    const url = 'http://localhost:3000/users';
+    const responseData = await fetchData(url, 'GET');
+    if (responseData) {
+      setAllUsers(responseData);
+    }
+  };
+
+
+
 
   return (
     <>
+          <button onClick={handleAllTasksClick}>all tasks</button>
       <h1>All Tasks</h1>
       {allTasks.map((currentTask) => (
+        <>
+        <p>{currentTask.userId}</p> 
         <TaskDetails key={currentTask.id} currentTask={currentTask} />
+        </>
       ))}
-      <button>all users</button>
-      <button>add table</button>
-      <button>add column</button>
-      <button>delete column</button>
+      <hr />
+      <button onClick={handleAllUsersClick}>all users</button>
+      <h1>All Users</h1>
+      {allUsers.map((user) => (
+        <UserDetails  key={user.id} user ={user}/>
+      ))}
+
+
     </>
   );
 }

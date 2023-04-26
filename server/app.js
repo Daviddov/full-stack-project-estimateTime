@@ -180,14 +180,14 @@ app.delete('/task/:id', async (req, res, next) => {
 });
 
 // delete user by id
-// app.delete('/users/:id', async (req, res, next) => {
-//   try {
-//     await db.deleteUser(req.params.id);
-//     res.send('User deleted successfully');
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+app.delete('/users/:id', async (req, res, next) => {
+  try {
+    await db.deleteUser(req.params.id);
+    res.send('User deleted successfully');
+  } catch (err) {
+    next(err);
+  }
+});
 
 // error handling middleware
 app.use((err, req, res, next) => {
