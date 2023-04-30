@@ -1,15 +1,22 @@
+import { TableCell, TableRow } from "@mui/material";
+import UserInfo from "./UserInfo";
+
 function Profile({currentUser}) {
 
 
    return (
-     <div>
-       <h2>My Profile</h2>
-       <p>Name: {currentUser.name}</p>
-       <p>Email: {currentUser.email}</p>
-       <p>My estimate time is: {}</p>
+     <>
+     <TableRow>
+    <TableCell>ID</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Password</TableCell>
+              <TableCell>Accuracy</TableCell>
+              </TableRow>
+   <UserInfo currentUser={currentUser} />
+              
 
-
-     </div>
+     </>
    );
  }
  

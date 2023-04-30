@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import TaskDetails from './TaskDetails';
 import { fetchData } from './fetchData';
 import UserDetails from './UserDetails';
-import { Typography } from '@mui/material';
+import { Grid, TableCell, TableRow, Typography } from '@mui/material';
 
 function DashboardManager() {
   const [allTasks, setAllTasks] = useState([]);
@@ -51,14 +51,21 @@ function DashboardManager() {
       <Typography variant="h5" align="center" color="primary">
         average Accuracy of all users: {calculateAll()}%
       </Typography>
+      <Grid container spacing={3}>
       {allTasks.map((currentTask) => (
         <TaskDetails key={currentTask.id} currentTask={currentTask} />
-
-      )
-      )}
+        )
+        )}
+        </Grid>
       <hr />
       <button onClick={handleAllUsersClick}>all users</button>
       <h1>All Users</h1>
+      <TableRow>
+    <TableCell>ID</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Password</TableCell>
+              </TableRow>
       {allUsers.map((user) => (
         <UserDetails  key={user.id} user ={user}/>
       ))}

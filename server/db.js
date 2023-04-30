@@ -10,18 +10,37 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-async function createUser(userData) {
-  const [rows] = await pool.execute(
-    'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
-    [userData.name, userData.email, userData.password]
-  );
-  const [newUser] = await pool.execute(
-        'SELECT * FROM Users WHERE id = ?',
-        [rows.insertId]
-      );
+// async function createUser(userData) {
+//   const [rows] = await pool.execute(
+//     'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+//     [userData.name, userData.email, userData.password]
+//   );
+//   const [newUser] = await pool.execute(
+//         'SELECT * FROM Users WHERE id = ?',
+//         [rows.insertId]
+//       );
       
-      console.log(newUser[0]);
-      return newUser[0];
+//       console.log(newUser[0]);
+//       return newUser[0];
+// }
+async function createUser(userData) {
+  try {
+    const [rows] = await pool.execute(
+      'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+      [userData.name, userData.email, userData.password]
+    );
+    const [newUser] = await pool.execute(
+      'SELECT * FROM Users WHERE id = ?',
+      [rows.insertId]
+    );
+    return newUser[0];
+  } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') {
+      throw new Error('Email already exists');
+    } else {
+      throw error;
+    }
+  }
 }
 
 
@@ -123,19 +142,37 @@ async function getAllTasks() {
   return rows;
 }
 
-async function getTasks(userId) {
+// async function getTasks(userId) {
   
-  const [rows] = await pool.execute('SELECT * FROM tasks WHERE userId = ?',
-  [userId]);
-  return rows;
+//   const [rows] = await pool.execute('SELECT * FROM tasks WHERE userId = ?',
+//   [userId]);
+//   return rows;
+// }
+async function getTasks(userId) {
+  const [users] = await pool.execute('SELECT * FROM users WHERE id = ?', [userId]);
+  if (users.length === 0) {
+    throw new Error(`User with id ${userId} not found`);
+  }
+  
+  const [tasks] = await pool.execute('SELECT * FROM tasks WHERE userId = ?', [userId]);
+  return tasks;
 }
 
 
-async function updateTask(taskData) {
-  const {id, timeElapsed, finishedTask} = taskData;
+async function setAdminUser(userId) {
   const [insertResult] = await pool.execute(
-    'UPDATE tasks SET timeElapsed = ?, finishedTask = ? WHERE id = ?',
-    [timeElapsed, finishedTask, id]
+    'UPDATE users SET management_authorization = ? WHERE id = ?',
+    [1, userId]
+  );
+  return insertResult;
+  }
+
+async function updateTask(taskData) {
+  const {id, timeElapsed, finishedTask,  accuracy} = taskData;
+  console.log(taskData);
+  const [insertResult] = await pool.execute(
+    'UPDATE tasks SET timeElapsed = ?, finishedTask = ?, accuracy = ? WHERE id = ?',
+    [timeElapsed, finishedTask, accuracy, id]
   );
   
   const [updateTask] = await pool.execute(
@@ -170,5 +207,5 @@ module.exports = {
   updateTask,
   deleteTask,
   getAllTasks,
-
+  setAdminUser,
 };

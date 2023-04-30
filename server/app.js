@@ -12,9 +12,7 @@
 //         res.send(JSON.stringify(result));
 //     })
 // })
-
 // module.exports = app;
-
 
 const express = require('express') ;
 const cookieParser = require('cookie-parser');
@@ -41,8 +39,6 @@ app.post('/addUser', async (req, res, next) => {
   }
 });
 
-
-
 //get all users
 app.get('/users', async (req, res, next) => {
   try {
@@ -52,20 +48,6 @@ app.get('/users', async (req, res, next) => {
     next(err);
   }
 });
-// get User By Name And Password
-// app.post('/user', async (req, res, next) => {
-//   try {
-//     const user = await db.getUserByNameAndPassword(req.body);
-//     if (user) {
-//       res.json(user);
-//     } else {
-// res.status(401);
-// res.end();
-//     }
-//   } catch (err) {
-//     next(err);
-//   }
-// });
 
 // get User By Email And Password
 app.post('/user', async (req, res, next) => {
@@ -131,7 +113,6 @@ app.post('/addTable', async (req, res, next) => {
     return res.status(500).send('Error adding column to table.');
   }
 });
-
  
  //add task
  app.post('/addTask', async (req, res, next) => {
@@ -147,9 +128,20 @@ app.post('/addTable', async (req, res, next) => {
    }
  });
 
+ //set user as admin
+ app.put('/users/:userId', async (req, res, next) =>  { 
+   try {
+     const task = await db.setAdminUser(req.params.userId);
+     if(task){
+       res.json(task);
+     }
+   } catch (err)  {
+     next(err);
+   }
+ });
+ 
  //update task
  app.put('/updateTask/:id', async (req, res, next) =>  { 
-   
    try {
      const task = await db.updateTask(req.body);
      if(task){
@@ -181,7 +173,6 @@ app.post('/addTable', async (req, res, next) => {
     next(err);
   }
 }) ;
-
 
 // delete task by id
 app.delete('/task/:id', async (req, res, next) => {

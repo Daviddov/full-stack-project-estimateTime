@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Table, TableBody, TableCell, TableRow, Typography } from "@mui/material";
 // import { Delete } from "@mui/icons-material";
 import { fetchData } from "./fetchData";
+import Profile from "./Profile";
+import UserInfo from "./UserInfo";
 
 function UserDetails({ user }) {
   const [deleted, setDeleted] = useState(false);
@@ -22,41 +24,26 @@ function UserDetails({ user }) {
 
   return (
     <>
-      {deleted ? (
-        <Box sx={{ mt: 2 }}>
-          <Typography variant="h5">User deleted</Typography>
-        </Box>
-      ) : (
-        <Box sx={{ mt: 2 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="h5">User Details</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography>ID: {user.id}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography>Name: {user.name}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography>Email: {user.email}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography>Password: {user.password}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="error"
-               
-                onClick={deleteUser}
-              >
-                Delete User
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
-      )}
+    {deleted ? (
+    <Typography variant="h5">User has been deleted.</Typography>
+    ) : (
+      <Grid item xs={12} sm={6} md={4} lg={3}>
+    <TableRow>
+    <TableCell >
+    <UserInfo currentUser={user} />
+    </TableCell>
+    <TableCell>
+    <Button
+      variant="contained"
+      color="error"
+      onClick={deleteUser}
+    >
+    Delete User
+    </Button>
+    </TableCell>
+    </TableRow>
+ </Grid>
+    )}
     </>
   );
 }

@@ -9,7 +9,7 @@ function HomePage({ currentUser }) {
            
        
            { currentUser ? <h1>{`wellcome ${currentUser.name}`}</h1> : <Navigate to={'/login'} />}
-            {currentUser.name === "admin" ? <DashboardManager /> : 
+            {currentUser.management_authorization == true ? <DashboardManager /> : 
              
             <Outlet />
     }
