@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import NavBar from './NavBar';
 import DashboardManager from './DashboardManeger';
+
 function HomePage({ currentUser }) {
  console.log(currentUser);
     return (

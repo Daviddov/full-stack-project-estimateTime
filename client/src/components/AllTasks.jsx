@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { fetchData } from './fetchData';
 import TaskDetails from './TaskDetails';
-
 import { Typography, Grid, Box } from '@mui/material';
 
 function AllTasks({ currentUser }) {
@@ -25,7 +23,7 @@ function AllTasks({ currentUser }) {
 
     return averageAccuracy;
   }
-
+ 
   const navigate = useNavigate();
 
   useEffect(() => {

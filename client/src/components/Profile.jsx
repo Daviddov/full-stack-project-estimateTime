@@ -3,7 +3,7 @@ import UserInfo from "./UserInfo";
 
 function Profile({currentUser}) {
 
-
+console.log(currentUser);
    return (
      <>
      <TableRow>
@@ -13,7 +13,7 @@ function Profile({currentUser}) {
               <TableCell>Password</TableCell>
               <TableCell>Accuracy</TableCell>
               </TableRow>
-   <UserInfo currentUser={currentUser} />
+   <UserInfo  currentUser={currentUser}/>
               
 
      </>

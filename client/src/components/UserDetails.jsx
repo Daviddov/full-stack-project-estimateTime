@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Box, Button, Grid, Table, TableBody, TableCell, TableRow, Typography } from "@mui/material";
-// import { Delete } from "@mui/icons-material";
 import { fetchData } from "./fetchData";
-import Profile from "./Profile";
 import UserInfo from "./UserInfo";
 
 function UserDetails({ user }) {
